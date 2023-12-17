@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { FiPlus, FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 import { Brand, Container, Content, Menu, NewNote, Search } from "./styles";
 
-import { useNavigate } from "react-router-dom";
 import { ButtonText } from "../../components/ButtonText";
 import { Header } from "../../components/Header";
 import { Input } from "../../components/Input";
@@ -16,7 +16,7 @@ export function Home() {
   const [tags, setTags] = useState([]);
   const [tagsSelected, setTagsSelected] = useState([]);
   const [notes, setNotes] = useState([]);
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   function handleTagSelected(tagName) {
     if (tagName === "all") {
@@ -35,6 +35,7 @@ export function Home() {
 
   function handleDetails(id) {
     navigate(`/details/${id}`);
+    console.log();
   }
 
   useEffect(() => {

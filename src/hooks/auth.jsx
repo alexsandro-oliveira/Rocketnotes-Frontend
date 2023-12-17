@@ -1,22 +1,26 @@
+// Importando Hooks do react, context, state, effect.
 import { createContext, useContext, useEffect, useState } from "react";
-
+//  Importando API para utilizar na função de SignIn
 import { api } from "../services/api";
 
+// Criando o contexto de autenticação.
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({}); // estado que vai guardar os dados do usuário e o token de autenticação.
 
+  // Função que vai fazer o post no endpoint /sessions da API.
   async function signIn({ email, password }) {
     try {
       const response = await api.post("/sessions", { email, password });
       const { user, token } = response.data;
 
-      localStorage.setItem("@rocketnotes:user", JSON.stringify(user));
+      // Salvando os dados no local storage.
+      localStorage.setItem("@rocketnotes:user", JSON.stringify(user)); // user é um objeto, aqui o JSON.strigify formata para um texto.
       localStorage.setItem("@rocketnotes:token", token);
 
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      setData({ user, token });
+      setData({ user, token }); // função do useState guardando, dentro da variável "data" as informações.
     } catch (error) {
       if (error.response) {
         alert(error.response.data.message);
@@ -63,6 +67,7 @@ function AuthProvider({ children }) {
     }
   }
 
+  // PEGANDO os dados salvos no localStorage
   useEffect(() => {
     const token = localStorage.getItem("@rocketnotes:token");
     const user = localStorage.getItem("@rocketnotes:user");
@@ -70,15 +75,16 @@ function AuthProvider({ children }) {
     if (token && user) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
+      // preenchimento do estado "data", dessa vez, com os dados que estavam salvos no localStorage.
       setData({
         token,
-        user: JSON.parse(user),
+        user: JSON.parse(user), // voltando o user para um objeto JSON, depois de ter transformado em string lá em cima.
       });
     }
   }, []);
 
   return (
-    <AuthContext.Provider
+    <AuthContext.Provider // aqui tá devolvendo o provider, que encapsulára as rotas da aplicação, lá no main.jsx.
       value={{
         signIn,
         signOut,

@@ -10,7 +10,7 @@ import { Tags } from "../../components/Tags";
 import { api } from "../../services/api";
 
 export function Details() {
-  cosnt[(data, setData)] = useState(null);
+  const [data, setData] = useState(null);
 
   const params = useParams();
   const navigate = useNavigate();
